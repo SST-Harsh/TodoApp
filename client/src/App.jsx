@@ -1,11 +1,16 @@
 import './App.css'
-import TodoPage from './Pages/TodoPage'
+import Main_Page from './Pages/Main_Page'
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 function App() {
  
 
   return (
     <>
-     <TodoPage/>
+     <Router>
+      <Routes>
+        <Route path="/" element={<Main_Page />} />
+      </Routes>
+    </Router>
     </>
   )
 }
