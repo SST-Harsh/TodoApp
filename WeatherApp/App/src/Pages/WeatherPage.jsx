@@ -11,6 +11,9 @@ export default function WeatherPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [cityWeatherList, setCityWeatherList] = useState([]);
+  const [geoLocation, setGeoLocation] = useState(null);
+  const [currentLocation, setCurrentLocation] = useState(null);
+  const [bgStyle, setBgStyle] = useState('bg-gradient-to-br from-blue-400 to-indigo-600');
   // List of random cities to fetch weather data for
   const randomCities = [
     'Ahmedabad', 'Mumbai', 'Delhi', 'Bangalore', 'Chennai', "New York", "London", "Tokyo", "Paris",
@@ -42,9 +45,28 @@ export default function WeatherPage() {
 
       setCityWeatherList(results);
     };
-
     fetchRandomCityWeather();
   }, []);
+  //  Update background style based on current weather condition
+  useEffect(() => {
+    const condition = weather?.weather[0]?.main || '';
+    switch (condition) {
+      case 'Clear':
+        setBgStyle('bg-gradient-to-br from-blue-400 to-indigo-600 text-white');
+        break;
+      case 'Clouds':
+        setBgStyle('bg-gradient-to-br from-gray-400 to-gray-600 text-white');
+        break;
+      case 'Rain':
+        setBgStyle('bg-gradient-to-br from-blue-600 to-blue-400 text-white');
+        break;
+      case 'Snow':
+        setBgStyle('bg-gradient-to-br from-blue-100 to-blue-50 text-gray-800');
+        break;
+      default:
+        setBgStyle('bg-gradient-to-br from-blue-400 to-indigo-600 text-white');
+    }
+  }, [weather]);
 
   const handleSearch = async (city) => {
     if (!city.trim()) return;
@@ -57,6 +79,8 @@ export default function WeatherPage() {
         `https://api.openweathermap.org/data/2.5/weather?q=${city}&units=metric&appid=72523f5b2c60cb33f7969c7c29310d51`
       );
       setWeather(response.data);
+      setCurrentLocation(response.data.name);
+      setGeoLocation(response.data.sys.country);
     } catch (err) {
       setError("City not found. Please try another location.");
       setWeather(null);
@@ -66,19 +90,26 @@ export default function WeatherPage() {
   };
   return (
 
-    <div className="min-h-screen max-w-full bg-gradient-to-br from-blue-400 to-indigo-600 p-4  items-center justify-start pt-20">
+    <div className={`min-h-screen max-w-full bg-gradient-to-br ${bgStyle} p-4 transition-colors duration-500`}>
+      <div className="max-w-7xl mx-auto">
+        <Searchbar onSearch={handleSearch}
+          loading={loading}
+          currentLocation={currentLocation}
+          geoLocation={geoLocation} />
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mt-8">
+          <div className="lg:col-span-2 mt-5 gap-10">
+            <WeatherCard weather={weather}
+              bgStyle={bgStyle} />
 
-
-
-      <Searchbar onSearch={handleSearch} loading={loading} />
-      <div className='grid grid-cols-1 md:grid-cols-2  max-w-full md:max-w-5xl mx-auto mt-8'>
-        <WeatherCard weather={weather} />
-
-        <WeatherList weather={weather}
-          weatherList={cityWeatherList} />
+               <TodaysHighlight weather={weather} bgStyle={bgStyle} />
+          </div>
+          <div className="lg:col-span-1">
+            <WeatherList weather={weather}
+              weatherList={cityWeatherList} />
+          </div>
+        </div>
+       
       </div>
-      <TodaysHighlight />
-
     </div>
 
 
