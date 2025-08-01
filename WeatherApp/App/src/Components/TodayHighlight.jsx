@@ -7,7 +7,7 @@ export default function TodaysHighlight({ weather, bgStyle }) {
     }
 
   const {
-    main: { feels_like, humidity, pressure, temp_max, temp_min },
+    main: { feels_like:feelsLike, humidity, pressure, temp_max, temp_min },
     wind: { speed, deg },
     visibility,
     sys: { sunrise, sunset }, 
@@ -27,7 +27,7 @@ export default function TodaysHighlight({ weather, bgStyle }) {
     {
       icon: <WiThermometer className="text-4xl" />,
       title: "Feels Like",
-      value: `${Math.round(feels_like)}°C`,
+      value: `${Math.round(feelsLike)}°C`,
       description: "How it actually feels outside"
     },
     {
@@ -97,7 +97,7 @@ export default function TodaysHighlight({ weather, bgStyle }) {
             <div className="flex items-center gap-3 mb-2">
               <div className="text-white">
                 {highlight.icon}
-              </div>
+              </div> 
               <h3 className="text-lg font-semibold">{highlight.title}</h3>
             </div>
             <p className="text-2xl font-bold mb-1">{highlight.value}</p>

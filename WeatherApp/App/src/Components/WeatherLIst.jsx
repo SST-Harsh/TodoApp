@@ -1,13 +1,13 @@
 import { motion } from 'framer-motion';
 
-export default function WeatherList({ weatherList, onCityClick }) {
+export default function WeatherList({ weatherList, loading, onClickCityName }) {
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
       opacity: 1,
       transition: {
         staggerChildren: 0.1,
-        when: "beforeChildren"
+        when: 'beforeChildren'
       }
     }
   };
@@ -18,7 +18,7 @@ export default function WeatherList({ weatherList, onCityClick }) {
       y: 0,
       opacity: 1,
       transition: {
-        type: "spring",
+        type: 'spring',
         stiffness: 100
       }
     }
@@ -29,7 +29,7 @@ export default function WeatherList({ weatherList, onCityClick }) {
       <h2 className="text-2xl font-bold text-center text-white mb-6">Other Cities</h2>
 
       {weatherList.length > 0 ? (
-        <motion.ul 
+        <motion.ul
           className="space-y-3"
           variants={containerVariants}
           initial="hidden"
@@ -42,7 +42,7 @@ export default function WeatherList({ weatherList, onCityClick }) {
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
               className="bg-white/20 rounded-xl p-4 backdrop-blur-sm cursor-pointer transition-colors hover:bg-white/30"
-              onClick={() => onCityClick && onCityClick(city.name)}
+              onClick={() => onClickCityName(city.name)}
             >
               <div className="flex items-center">
                 <div className="flex-shrink-0">
@@ -62,7 +62,7 @@ export default function WeatherList({ weatherList, onCityClick }) {
                     </span>
                   </div>
                   <div className="flex justify-between mt-1">
-                    <span className="text-sm text-white/80 capitalize">
+                    <span className="text-sm text-white capitalize">
                       {city.weather[0].description}
                     </span>
                     <div className="flex space-x-2 text-sm">
@@ -83,17 +83,19 @@ export default function WeatherList({ weatherList, onCityClick }) {
             </motion.li>
           ))}
         </motion.ul>
-      ) : (
+      ) : loading ? (
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           className="text-center py-8"
         >
-          <div className="inline-block animate-pulse">
+          <div className="inline-block animate-spin">
             <div className="w-10 h-10 border-4 border-white/30 border-t-white rounded-full"></div>
           </div>
           <p className="mt-4 text-white/80">Loading weather data...</p>
         </motion.div>
+      ) : ( 
+        <p className="text-white text-center">No cities found.</p>
       )}
     </div>
   );
