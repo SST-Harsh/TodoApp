@@ -49,6 +49,8 @@ export default function WeatherPage() {
     'Ahmedabad', 'Mumbai', 'Delhi', 'Bangalore', 'Chennai', "New York", "London", "Tokyo", "Paris",
     "Sydney", "Beijing", "Berlin", "Moscow", "Dubai", "Rome", "Singapore", "Toronto", "San Francisco", "Los Angeles"
   ];
+
+  console.log("Random Counter code:", randomCities)
   //  Function to pick 5 unique random cities
   const getRandomCities = () => {
     const shuffled = [...randomCities].sort(() => 0.5 - Math.random());
